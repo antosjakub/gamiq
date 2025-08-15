@@ -35,6 +35,12 @@ cartpole_arm_h = 15
 cartpole_init_arm_angle = 10
 
 x = 0
+theta = cartpole_init_arm_angle
+
+def rad_to_deg(rad):
+    return rad/(2*np.pi) * 360
+def deg_to_rad(deg):
+    return deg/360 * 2*np.pi
 
 # Game loop
 running = True
@@ -45,8 +51,14 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
                 x += 5
+                theta -= 5
             if event.key == pygame.K_LEFT:
                 x -= 5
+                theta += 5
+    
+    alpha = rad_to_deg( np.arctan( 1/cartpole_arm_w * np.sin(deg_to_rad(theta)) ) )
+    print(theta, alpha)
+    theta += alpha
     
     # GRAPHICS
     pygame.display.flip()
@@ -65,7 +77,7 @@ while running:
     ] 
     arm_coords = [
         Vector2(SCREEN_W//2 + x, SCREEN_H//2 + ground_h_offset) +
-        p.rotate(-90+cartpole_init_arm_angle) for p in arm_pnts
+        p.rotate(-90+theta) for p in arm_pnts
     ]
     pygame.draw.polygon(window, WHITE, arm_coords, 0)
     # -- cartpole center
