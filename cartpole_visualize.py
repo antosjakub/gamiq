@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2
-import numpy as np
 import cartpole_physics
+import numpy as np
 
 
 # Initialize Pygame
@@ -37,6 +37,7 @@ cartpole = cartpole_physics.CartPole(
 )
 
 i = 0
+data = []
 # Game loop
 running = True
 while running:
@@ -53,9 +54,13 @@ while running:
         #print("Right arrow is being held down.")
         action = 1
 
+    data.append([
+        cartpole.x, cartpole.x_dot, cartpole.theta, cartpole.theta_dot, action
+    ])
+
     dt = clock.tick(100)
     delta_t = dt/500
-    cartpole.step(delta_t, action)
+    cartpole.step(action, delta_t)
 
     
     # GRAPHICS
@@ -88,10 +93,13 @@ while running:
     pygame.display.update()
 
     i+=1
-    #if i > 100:
-    #    break
+    if i > 1000:
+        break
 
 # Quit Pygame
 pygame.quit()
 
-
+import csv
+with open('output.csv', 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerows(data)

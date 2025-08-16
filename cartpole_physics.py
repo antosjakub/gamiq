@@ -31,14 +31,14 @@ class CartPole:
           the pole's angular acceleration
     """
 
-    def __init__(self, pole_length, x, x_dot, theta, theta_dot):
+    def __init__(self, pole_length=300, x=0, x_dot=0, theta=0, theta_dot=0):
         self.l = pole_length
         self.x = x
         self.x_dot = x_dot
         self.theta = theta
         self.theta_dot = theta_dot
 
-    def step(self, dt, action):
+    def step(self, action, dt=0.02):
         if self.theta < np.pi/2 and self.theta > -np.pi/2:
             mult_fact = -action
         else:
@@ -52,8 +52,3 @@ class CartPole:
         theta_double_dot -= 0.002*self.theta_dot / dt
         self.theta_dot += theta_double_dot * dt
         self.theta += self.theta_dot * dt
-
-        print(self.theta, self.x)
-
-
-
