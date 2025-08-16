@@ -28,7 +28,13 @@ cartpole_arm_w = 300
 cartpole_arm_h = 15
 
 # initial conditions
-cartpole = cartpole_physics.CartPole(cartpole_arm_w, x=0, x_dot=0, theta=cartpole_physics.rad_from_deg(0), theta_dot=0)
+cartpole = cartpole_physics.CartPole(
+    pole_length=cartpole_arm_w,
+    x=0,
+    x_dot=0,
+    theta=cartpole_physics.rad_from_deg(0),
+    theta_dot=0
+)
 
 i = 0
 # Game loop
