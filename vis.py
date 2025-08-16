@@ -28,7 +28,7 @@ cartpole_arm_w = 300
 cartpole_arm_h = 15
 
 # initial conditions
-cartpole = cartpole_physics.CartPole(cartpole_arm_w, x=0, x_dot=0, theta=cartpole_physics.rad_from_deg(10), theta_dot=0)
+cartpole = cartpole_physics.CartPole(cartpole_arm_w, x=0, x_dot=0, theta=cartpole_physics.rad_from_deg(0), theta_dot=0)
 
 i = 0
 # Game loop
@@ -46,10 +46,10 @@ while running:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        print("Left arrow is being held down.")
+        #print("Left arrow is being held down.")
         action = -1
     if keys[pygame.K_RIGHT]:
-        print("Right arrow is being held down.")
+        #print("Right arrow is being held down.")
         action = 1
 
     dt = clock.tick(100)

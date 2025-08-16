@@ -19,13 +19,21 @@ class CartPole:
 
     def step(self, dt, action):
         x_double_dot = 0
-        x_double_dot = 100.0*action
+        if self.theta < np.pi/2 and self.theta > -np.pi/2:
+            mult_fact = -action
+        else:
+            mult_fact = action
+
+        x_double_dot = 100.0*action - 0.0025*self.x_dot / dt
         self.x_dot += x_double_dot * dt
         self.x += self.x_dot * dt
-        #print(x_double_dot, self.x_dot, self.x)
-        theta_double_dot = g * np.sin(self.theta) + x_double_dot/100
+
+        theta_double_dot = g * np.sin(self.theta) + 0.5*mult_fact*np.abs(x_double_dot)/100
+        theta_double_dot = theta_double_dot - 0.002*self.theta_dot / dt
         self.theta_dot += theta_double_dot * dt
         self.theta += self.theta_dot * dt
+
+        print(self.theta, self.x)
 
 
 
