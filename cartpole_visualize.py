@@ -44,11 +44,6 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        #elif event.type == pygame.KEYDOWN:
-        #    if event.key == pygame.K_RIGHT:
-        #        action = 1
-        #    if event.key == pygame.K_LEFT:
-        #        action = -1
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
@@ -61,8 +56,6 @@ while running:
     dt = clock.tick(100)
     delta_t = dt/500
     cartpole.step(delta_t, action)
-
-
 
     
     # GRAPHICS
