@@ -9,6 +9,27 @@ def rad_from_deg(deg):
 
 
 class CartPole:
+    """
+    theta = angle of the pole
+    theta_dot = angular velocity
+    theta_double_dot = angular acceleration
+    (theta = 0 means the pole is upright, theta_dot > 0 means it is going clockwise)
+    ---
+    x = position of the cart
+    x_dot = speed
+    ---
+    action = -1/1/0
+    action = -1 means the user clicked or holds left arrow
+    action = 1 means the user clicked or holds right arrow
+    action = 0 means the user did not do anything 
+    ---
+    Core ideas:
+        - 'action' corresponds to the force applied to the cart
+        - the equatin governing the behavior of the cart is:
+                theta_double_dot = g * np.sin(theta)
+        - there is a damping (friction) term in both the equation for the car's acceleration and 
+          the pole's angular acceleration
+    """
 
     def __init__(self, pole_length, x, x_dot, theta, theta_dot):
         self.l = pole_length
