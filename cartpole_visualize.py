@@ -28,12 +28,13 @@ cartpole_arm_w = 300
 cartpole_arm_h = 15
 
 # initial conditions
+r = np.random.uniform(-1,1, 4)
 cartpole = cartpole_physics.CartPole(
     pole_length=cartpole_arm_w,
-    x=0,
-    x_dot=0,
-    theta=cartpole_physics.rad_from_deg(0),
-    theta_dot=0
+    x = 200*r[0]/5,
+    x_dot = 50*r[1]/5,
+    theta = np.pi/18*r[2]/5,
+    theta_dot = np.pi/18*r[3]/5
 )
 
 i = 0

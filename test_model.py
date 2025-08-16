@@ -1,7 +1,7 @@
 import numpy as np
 import torch
-from cartpole import CartPole   # your custom physics module
-from reinforce import PolicyNet     # import the same policy architecture
+from cartpole import CartPole
+from reinforce import PolicyNet
 
 
 def evaluate(model_path="reinforce_cartpole_custom.pt", episodes=5):
@@ -14,8 +14,9 @@ def evaluate(model_path="reinforce_cartpole_custom.pt", episodes=5):
         data = []
         # set IC
         env.reset()
-        #env.set_random_IC(mult_x=500, mult_theta=np.pi/6)
-        env.set_random_IC(mult_x=100, mult_theta=np.pi/18)
+        hardest_IC = np.array([200,50,np.pi/18,np.pi/18])
+        IC = hardest_IC / 5
+        env.set_random_IC(*IC)
         state = env.get_state()
 
         done = False

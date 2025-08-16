@@ -18,16 +18,26 @@ class PolicyNet(nn.Module):
         return self.net(x)
 
 
-def train_reinforce(episodes=2000, gamma=0.99, lr=1e-2):
+def train_reinforce(episodes=5000, gamma=0.99, lr=1e-2):
     env = CartPole()
     policy = PolicyNet()
     optimizer = optim.Adam(policy.parameters(), lr=lr)
     loss_fn = nn.CrossEntropyLoss(reduction="none")
 
+    #easiest_IC = np.array([0,0,np.pi/90,np.pi/90])
+    hardest_IC = np.array([200,50,np.pi/18,np.pi/18])
+    #IC = easiest_IC
+    IC = hardest_IC / 5
     for ep in range(episodes):
         states, actions, rewards = [], [], []
+
         env.reset()
-        env.set_random_IC(mult_x=100, mult_theta=np.pi/18)
+        #if ep % 500 == 0:
+        #    fraction = ep/episodes
+        #    IC = easiest_IC*(1-fraction) + hardest_IC*fraction
+        #    #print(ep, fraction, IC)
+        #    if ep != 0: print("Increasing diffuculty of initial conditions!")
+        env.set_random_IC(*IC)
         state = env.get_state()
         done = False
 
