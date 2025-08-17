@@ -7,10 +7,11 @@ import argparse
 
 parser = argparse.ArgumentParser()
 # model parameters
-parser.add_argument("--hidden_dim", default=32, type=int, help="Size of the hidden layer.")
-parser.add_argument("--episodes", default=2000, type=int, help="Number of epochs.")
+parser.add_argument("--hidden_dim", default=8, type=int, help="Size of the hidden layer.")
+parser.add_argument("--episodes", default=1000, type=int, help="Number of epochs.")
 parser.add_argument("--gamma", default=0.99, type=float, help="Gamma.")
-parser.add_argument("--learning_rate", default=0.01, type=float, help="Learning rate.")
+parser.add_argument("--learning_rate_initial", default=0.1, type=float, help="Learning rate.")
+parser.add_argument("--learning_rate_final", default=0.001, type=float, help="Learning rate.")
 # other
 parser.add_argument("--save_model", default=False, action="store_true", help="Wheather or not to same the model to disk.")
 parser.add_argument("--model_name", default="gym_cartpole_model.pt", type=str, help="Output model path.")
@@ -43,11 +44,23 @@ class ValueNet(nn.Module):
     def forward(self, x):
         return self.net(x).squeeze(-1)
 
-def train_reinforce(env, policy, value, learning_rate, episodes, gamma, print_when_training):
-    optimizer_policy = optim.Adam(policy.parameters(), lr=learning_rate)
-    optimizer_value = optim.Adam(value.parameters(), lr=learning_rate)
+def train_reinforce(env, policy, value, learning_rate_initial, learning_rate_final, episodes, gamma, print_when_training):
+    optimizer_policy = torch.optim.Adam(policy.parameters(), lr=learning_rate_initial)
+    optimizer_value = torch.optim.Adam(value.parameters(), lr=learning_rate_initial)
     loss_policy_ce = nn.CrossEntropyLoss(reduction="none")
     loss_value_mse = nn.MSELoss()
+
+    decay_steps = episodes # 1 update per episode
+    scheduler_policy = torch.optim.lr_scheduler.CosineAnnealingLR(
+        optimizer_policy,
+        T_max=decay_steps,
+        eta_min=learning_rate_final
+    )
+    scheduler_value = torch.optim.lr_scheduler.CosineAnnealingLR(
+        optimizer_value,
+        T_max=decay_steps,
+        eta_min=learning_rate_final
+    )
 
 
     #easiest_IC = np.array([0,0,np.pi/90,np.pi/90])
@@ -120,6 +133,9 @@ def train_reinforce(env, policy, value, learning_rate, episodes, gamma, print_wh
         optimizer_value.zero_grad()
         critic_loss.backward()
         optimizer_value.step()
+        # ---- Cosine decay
+        scheduler_policy.step()
+        scheduler_value.step()
 
         if print_when_training:
             if (ep + 1) % 100 == 0:
@@ -139,7 +155,7 @@ if __name__ == "__main__":
     env = CartPole()
     policy = PolicyNet(args.hidden_dim)
     value = ValueNet(args.hidden_dim)
-    trained_policy = train_reinforce(env, policy, value, args.learning_rate, args.episodes, args.gamma, args.print_when_training)
+    trained_policy = train_reinforce(env, policy, value, args.learning_rate_initial, args.learning_rate_final, args.episodes, args.gamma, args.print_when_training)
 
     if args.save_model:
         torch.save(trained_policy.state_dict(), args.model_name)
