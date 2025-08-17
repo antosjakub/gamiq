@@ -52,7 +52,7 @@ def evaluate(env, policy, episodes=5, print_when_evaluating=True, save_epochs=Tr
         if save_epochs:
             np.savetxt(f'data/episode_{ep+1}.csv', data, delimiter=',')
 
-    reward_per_episode = np.array(reward_per_episode)
+    reward_per_episode = np.array(reward_per_episode).astype(int)
     return reward_per_episode
 
 
