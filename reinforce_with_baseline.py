@@ -8,10 +8,10 @@ import argparse
 parser = argparse.ArgumentParser()
 # model parameters
 parser.add_argument("--hidden_dim", default=8, type=int, help="Size of the hidden layer.")
-parser.add_argument("--episodes", default=1000, type=int, help="Number of epochs.")
+parser.add_argument("--episodes", default=10000, type=int, help="Number of epochs.")
 parser.add_argument("--gamma", default=0.99, type=float, help="Gamma.")
 parser.add_argument("--learning_rate_initial", default=0.1, type=float, help="Learning rate.")
-parser.add_argument("--learning_rate_final", default=0.001, type=float, help="Learning rate.")
+parser.add_argument("--learning_rate_final", default=0.005, type=float, help="Learning rate.")
 # other
 parser.add_argument("--save_model", default=False, action="store_true", help="Wheather or not to same the model to disk.")
 parser.add_argument("--model_name", default="gym_cartpole_model.pt", type=str, help="Output model path.")
@@ -67,6 +67,7 @@ def train_reinforce(env, policy, value, learning_rate_initial, learning_rate_fin
     #hardest_IC = np.array([200,50,np.pi/18,np.pi/18])
     #IC = easiest_IC
     #IC = hardest_IC / 5
+    past_rewards = []
     for ep in range(episodes):
         states, actions, rewards = [], [], []
 
@@ -137,9 +138,11 @@ def train_reinforce(env, policy, value, learning_rate_initial, learning_rate_fin
         scheduler_policy.step()
         scheduler_value.step()
 
+        past_rewards.append(sum(rewards))
         if print_when_training:
             if (ep + 1) % 100 == 0:
-                print(f"Episode {ep+1}, reward = {sum(rewards)}")
+                print(f"Episode {ep+1}, reward = {past_rewards[-1]}, average reward = {sum(past_rewards)/100}")
+                past_rewards = []
 
     return policy
 
