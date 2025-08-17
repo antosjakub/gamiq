@@ -22,12 +22,12 @@ class CartPole:
         self.theta = 0
         self.theta_dot = 0
 
-    def set_random_IC(self, mult_x=0, mult_x_dot=0, mult_theta=0, mult_theta_dot=0):
+    def set_random_IC(self, max_x=40, max_x_dot=10, max_theta=np.pi/90, max_theta_dot=np.pi/90):
         r = np.random.uniform(-1,1, 4)
-        self.x = mult_x * r[0]
-        self.x_dot = mult_x_dot * r[1]
-        self.theta = mult_theta * r[2]
-        self.theta_dot = mult_theta_dot * r[3]
+        self.x = max_x * r[0]
+        self.x_dot = max_x_dot * r[1]
+        self.theta = max_theta * r[2]
+        self.theta_dot = max_theta_dot * r[3]
 
     def get_state(self):
         return np.array([self.x, self.x_dot, self.theta, self.theta_dot], dtype=np.float32)

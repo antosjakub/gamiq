@@ -94,8 +94,9 @@ while running:
     pygame.display.update()
 
     i+=1
-    if i > 1000:
-        break
+    print(i)
+    #if i > 1000:
+    #    break
 
 # Quit Pygame
 pygame.quit()
