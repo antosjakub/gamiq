@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from cartpole import CartPole
+from cartpole_physics import CartPole
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -17,9 +17,10 @@ parser.add_argument("--save_model", default=False, action="store_true", help="Wh
 parser.add_argument("--model_name", default="gym_cartpole_model.pt", type=str, help="Output model path.")
 parser.add_argument("--print_when_training", default=False, action="store_true", help="Print debug info during training.")
 parser.add_argument("--evaluate", default=False, action="store_true", help="Run evaluation after training.")
-parser.add_argument("--evaluate_episodes", default=5, type=int, help="Number of epochs for evaluation.")
-parser.add_argument("--print_when_evaluating", default=False, action="store_true", help="Print debug info during training.")
+parser.add_argument("--episodes_eval", default=5, type=int, help="Number of epochs for evaluation.")
+parser.add_argument("--print_when_eval", default=False, action="store_true", help="Print debug info during training.")
 parser.add_argument("--save_eval_episodes", default=False, action="store_true", help="Save each epoch to a csv file.")
+# python reinforce_with_baseline.py --print_when_train --evaluate --print_when_eval --hidden_dim=16 --episodes=3000 --gamma=0.99 --learning_rate_initial=0.005 --learning_rate_final=0.0001 --save_eval_episodes
 
 
 class PolicyNet(nn.Module):
@@ -91,7 +92,7 @@ def train_reinforce(env, policy, value, learning_rate_initial, learning_rate_fin
             probs = torch.softmax(logits, dim=-1).detach().numpy()[0]
 
             action = np.random.choice(len(probs), p=probs) - 1  # map {0,1,2} -> {-1,0,1}
-            next_state, reward, done = env.step(action)
+            next_state, reward, done = env.step_wrapped(action)
             next_state = torch.from_numpy(next_state).float()
 
             states.append(state)
@@ -153,7 +154,7 @@ if __name__ == "__main__":
     #print("save_eval_episodes?", args.save_eval_episodes)
     #print("evaluate?", args.evaluate)
     #print("print train?", args.print_when_training)
-    #print("print eval?", args.print_when_evaluating)
+    #print("print eval?", args.print_when_eval)
 
     env = CartPole()
     policy = PolicyNet(args.hidden_dim)
@@ -165,7 +166,7 @@ if __name__ == "__main__":
 
     if args.evaluate:
         import test_model
-        reward_per_episode = test_model.evaluate(env, policy, args.evaluate_episodes, args.print_when_evaluating, save_epochs=args.save_eval_episodes)
-        print(f"average reward: {np.sum(reward_per_episode)/args.evaluate_episodes}, rewards = {reward_per_episode}")
+        reward_per_episode = test_model.evaluate(env, policy, args.episodes_eval, args.print_when_eval, save_epochs=args.save_eval_episodes)
+        print(f"average reward: {np.sum(reward_per_episode)/args.episodes_eval}, rewards = {reward_per_episode}")
 
 

@@ -1,8 +1,12 @@
 import pygame
 from pygame.math import Vector2
-import cartpole_physics
+from cartpole_physics import CartPole
 import numpy as np
 
+def deg_from_rad(rad):
+    return rad / (2 * np.pi) * 360
+def rad_from_deg(deg):
+    return deg / 360 * 2 * np.pi
 
 # Initialize Pygame
 pygame.init()
@@ -29,7 +33,7 @@ cartpole_arm_h = 15
 
 # initial conditions
 r = np.random.uniform(-1,1, 4)
-cartpole = cartpole_physics.CartPole(
+cartpole = CartPole(
     pole_length=cartpole_arm_w,
     x = 200*r[0]/5,
     x_dot = 50*r[1]/5,
@@ -82,7 +86,7 @@ while running:
     ] 
     arm_coords = [
         Vector2(SCREEN_W//2 + cartpole.x, SCREEN_H//2 + ground_h_offset) +
-        p.rotate(-90+cartpole_physics.deg_from_rad(cartpole.theta)) for p in arm_pnts
+        p.rotate(-90+deg_from_rad(cartpole.theta)) for p in arm_pnts
     ]
     pygame.draw.polygon(window, WHITE, arm_coords, 0)
     # -- cartpole center
@@ -101,7 +105,7 @@ while running:
 # Quit Pygame
 pygame.quit()
 
-import csv
-with open('output.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerows(data)
+#import csv
+#with open('output.csv', 'w', newline='') as file:
+#    writer = csv.writer(file)
+#    writer.writerows(data)

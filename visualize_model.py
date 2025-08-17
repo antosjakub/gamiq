@@ -1,8 +1,11 @@
 import pygame
 from pygame.math import Vector2
 import numpy as np
-import cartpole
 
+def deg_from_rad(rad):
+    return rad / (2 * np.pi) * 360
+def rad_from_deg(deg):
+    return deg / 360 * 2 * np.pi
 
 # Initialize Pygame
 pygame.init()
@@ -63,7 +66,7 @@ while running:
     ] 
     arm_coords = [
         Vector2(SCREEN_W//2 + x, SCREEN_H//2 + ground_h_offset) +
-        p.rotate(-90+cartpole.deg_from_rad(theta)) for p in arm_pnts
+        p.rotate(-90+deg_from_rad(theta)) for p in arm_pnts
     ]
     pygame.draw.polygon(window, WHITE, arm_coords, 0)
     # -- cartpole center

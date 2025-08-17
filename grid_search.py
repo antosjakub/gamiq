@@ -7,14 +7,14 @@
 
 # python reinforce.py 
 # --hidden_dim=32 --episodes=1000 --gamma=0.99 --learning_rate=0.01
-# --save_model=False --print_when_training=False --evaluate=False --evaluate_episodes=10 --print_when_evaluating=False --save_eval_episodes=False
+# --save_model=False --print_when_training=False --evaluate=False --episodes_eval=10 --print_when_eval=False --save_eval_episodes=False
 
 # script_a.py
 import subprocess
 
 # Arguments to pass
 script = ["python", "reinforce.py"]
-model_behavior = ["--evaluate", "--evaluate_episodes", "10"]
+model_behavior = ["--evaluate", "--episodes_eval", "10"]
 
 hidden_dim_options = [8, 32, 128]
 episodes_options = [500, 1500, 4500]
